@@ -1,24 +1,19 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { SignupScreen } from 'screens/auth/signup-screen';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
+import {QueryClient, QueryClientProvider} from 'react-query';
+import { Navigation } from 'navigation';
 
 
 function App(): JSX.Element {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
-      <QueryClientProvider client={queryClient}><SignupScreen /></QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <Navigation />
+      </QueryClientProvider>
     </SafeAreaView>
   );
 }
