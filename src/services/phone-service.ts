@@ -7,19 +7,22 @@ export const sendOtpViaWhatsapp = async (phone: string) => {
     channel: 'whatsapp',
     locale: 'en',
   };
-  console.log(body);
-  const {data} = await axios.post(`${Config.BASE_TWILIO_URL}/start-verify`, body);
+  const {data} = await axios.post(
+    `${Config.BASE_TWILIO_URL}/start-verify`,
+    body,
+  );
   return data;
 };
 
 export const verifyOtp = async (phone: string, code: string) => {
   const body = {
     to: phone,
-    code: 'whatsapp',
+    code,
   };
-
-  const {data} = await axios.post(`${Config.BASE_TWILIO_URL}/check-verify`, {
+  console.log(body);
+  const res = await axios.post(`${Config.BASE_TWILIO_URL}/check-verify`, {
     body,
   });
-  return data;
+  console.log(res);
+  return res.data;
 };

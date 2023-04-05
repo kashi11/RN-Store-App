@@ -7,37 +7,36 @@ import {useNavigation} from '@react-navigation/native';
 import {AuthNavigationStackProp} from 'navigation/auth-navigation';
 import {sendOtpViaWhatsapp} from 'services/phone-service';
 import Toast from 'react-native-toast-message';
+import {Signin} from 'components/auth/signin';
+import {signin} from 'services/user-service';
+import {User} from 'utils.ts/types';
 
-type SignupValues = {
-  email: string;
-  phoneNumber: string;
-  password: string;
-  username: string;
-};
+type Signin = Required<Omit<User, 'email'>>;
 
-export const SignupScreen = (): JSX.Element => {
-  const {setUser} = useAuthStore();
+export const SigninScreen = (): JSX.Element => {
+  const {setUser} = useAuthStore(state => state);
   const form = useForm({
-    defaultValues: {email: '', phoneNumber: '', password: '', username: ''},
+    defaultValues: {username: '', phoneNumber: '', password: ''},
   });
-  const navigation = useNavigation<AuthNavigationStackProp<'Signup'>>();
+  const navigation = useNavigation<AuthNavigationStackProp<'Signin'>>();
 
   const {watch, handleSubmit} = form;
-  const watchEmail = watch('email', '');
+  const watchUsername = watch('username', '');
   const watchPassword = watch('password', '');
   const watchPhone = watch('phoneNumber');
-
-  const handleSignup = handleSubmit(async (values: SignupValues) => {
+  const handleSignin = handleSubmit(async (values: Signin) => {
     setUser(values);
     try {
+      const {token} = await signin(values.username, values.password);
       await sendOtpViaWhatsapp(values.phoneNumber);
       Toast.show({
         type: 'success',
         position: 'bottom',
         text1: 'Otp sent.',
       });
-      navigation.navigate('Otp', {redirectFrom: 'Signup'});
+      navigation.navigate('Otp', {redirectFrom: 'Signin', token: token});
     } catch (error: any) {
+      console.log(error);
       Toast.show({
         type: 'error',
         position: 'bottom',
@@ -46,12 +45,17 @@ export const SignupScreen = (): JSX.Element => {
     }
   });
 
+  const handleSignUp = () => {
+    navigation.navigate('Signup');
+  };
+
   return (
     <>
       <FormProvider {...form}>
-        <Signup
-          handleSignup={handleSignup}
-          disableSubmit={!watchEmail || !watchPassword || !watchPhone}
+        <Signin
+        onSignup={handleSignUp}
+          handleSignin={handleSignin}
+          disableSubmit={!watchUsername || !watchPassword || !watchPhone}
         />
       </FormProvider>
     </>

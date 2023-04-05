@@ -14,6 +14,7 @@ type AuthStore = {
 const userInitialState: User = {
   username: '',
   email: '',
+  phoneNumber: '',
 };
 
 export const useAuthStore = create<AuthStore>(set => ({

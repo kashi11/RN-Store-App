@@ -1,16 +1,54 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {useAuthStore} from 'hooks/store/use-auth-store';
-import {AuthNavigationStackProp} from 'navigation/auth-navigation';
+import {
+  AuthNavigationParams,
+  AuthNavigationStackProp,
+  AuthRouteProps,
+} from 'navigation/auth-navigation';
 import {useState} from 'react';
 import {SafeAreaView, Text, StyleSheet} from 'react-native';
 import {verifyOtp} from 'services/phone-service';
+import {useAsyncStorage} from '@react-native-async-storage/async-storage';
+import {useMutation} from 'react-query';
+import {createUser, signin} from 'services/user-service';
+import {User} from 'utils.ts/types';
+
+type SignUp = Required<User>;
 
 export const OtpScreen = () => {
-  const {user} = useAuthStore();
+  const {user, setToken} = useAuthStore();
+  const {setItem} = useAsyncStorage('token');
   const [invalidCode, setInvalidCode] = useState(false);
   const navigation = useNavigation<AuthNavigationStackProp<'Otp'>>();
+  const {
+    params: {redirectFrom, token},
+  } = useRoute<AuthRouteProps<'Otp'>>();
+  const mutation = useMutation({
+    mutationFn: (user: Required<User>) => {
+      return createUser(user.email, user.phoneNumber, user.password);
+    },
+    onSuccess: async () => {
+      const {token} = await signin('mor_2314', '83r5^_');
+      setItem(token);
+      setToken(token || '');
+    },
+  });
 
+  const handleVerification = async (code: string) => {
+    verifyOtp(user.phoneNumber, code).then(async ({success}) => {
+      console.log({success});
+      if (!success) setInvalidCode(true);
+      else {
+        if (redirectFrom === 'Signup') {
+          mutation.mutate(user as SignUp);
+        } else {
+          setItem(token || '');
+          setToken(token || '');
+        }
+      }
+    });
+  };
   return (
     <SafeAreaView style={styles.wrapper}>
       <Text style={styles.prompt}>Enter the code we sent you</Text>
@@ -23,12 +61,7 @@ export const OtpScreen = () => {
         autoFocusOnLoad
         codeInputFieldStyle={styles.underlineStyleBase}
         codeInputHighlightStyle={styles.underlineStyleHighLighted}
-        onCodeFilled={code => {
-          verifyOtp(user.phoneNumber, code).then(success => {
-            if (!success) setInvalidCode(true);
-            success && navigation.navigate('Signup');
-          });
-        }}
+        onCodeFilled={handleVerification}
       />
       {invalidCode && <Text style={styles.error}>Incorrect code.</Text>}
     </SafeAreaView>
@@ -40,11 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  borderStyleBase: {
-    width: 30,
-    height: 45,
   },
 
   borderStyleHighLighted: {
