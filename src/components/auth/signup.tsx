@@ -34,7 +34,7 @@ export const Signup = ({disableSubmit, handleSignup}: Props): JSX.Element => {
       />
       <ControlledInput
         error={errors.phone?.message as string}
-        name="phone"
+        name="phoneNumber"
         keyboardType="phone-pad"
         control={control}
         placeholder="Enter phone number"
