@@ -14,7 +14,7 @@ function App(): JSX.Element {
       <QueryClientProvider client={queryClient}>
         <Navigation />
       </QueryClientProvider>
-      <Toast />
+      <Toast position='bottom' />
     </SafeAreaView>
   );
 }

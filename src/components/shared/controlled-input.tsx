@@ -7,7 +7,7 @@ import {
   Path,
   RegisterOptions,
 } from 'react-hook-form';
-import {Input} from './Input';
+import { Input } from './Input';
 
 type Props<T extends FieldValues> = TextInputProps & {
   control: Control<T, any>;

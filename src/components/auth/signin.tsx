@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import {useFormContext} from 'react-hook-form';
-import {ControlledInput} from 'components/shared/ControlledInput';
+import {ControlledInput} from 'components/shared/controlled-input';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 type Props = {

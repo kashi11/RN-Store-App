@@ -2,10 +2,12 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import {Home} from 'screens/home';
+import {ProductsScreen} from 'screens/product/products-screen';
+import {Button} from 'react-native';
+import { AppHeaderRight } from 'components/shared/app-header-right';
 
 export type AppNavigationParams = {
-  Home: undefined;
+  Products: undefined;
 };
 
 export type AuthNavigationStackProp<T extends keyof AppNavigationParams> =
@@ -15,8 +17,12 @@ const Stack = createNativeStackNavigator<AppNavigationParams>();
 
 export const AppNavigation = (): JSX.Element => {
   return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={Home} />
+    <Stack.Navigator initialRouteName="Products">
+      <Stack.Screen
+        options={{headerRight: (props)=><AppHeaderRight {...props} />}}
+        name="Products"
+        component={ProductsScreen}
+      />
     </Stack.Navigator>
   );
 };

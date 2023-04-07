@@ -20,9 +20,7 @@ export const verifyOtp = async (phone: string, code: string) => {
     code,
   };
   console.log(body);
-  const res = await axios.post(`${Config.BASE_TWILIO_URL}/check-verify`, {
-    body,
-  });
+  const res = await axios.post(`${Config.BASE_TWILIO_URL}/check-verify`, body);
   console.log(res);
   return res.data;
 };

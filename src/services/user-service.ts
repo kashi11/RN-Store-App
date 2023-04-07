@@ -14,7 +14,10 @@ export const createUser = async (
   return data;
 };
 
-export const signin = async (username: string, password: string) => {
+export const signin = async (
+  username: string,
+  password: string,
+): Promise<{token: string}> => {
   const {data} = await axios.post(`${Config.BASE_API_URL}/auth/login`, {
     username,
     password,
