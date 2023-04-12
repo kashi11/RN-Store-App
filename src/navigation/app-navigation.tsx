@@ -26,7 +26,7 @@ export const AppNavigation = (): JSX.Element => {
       initialRouteName="Products"
       screenOptions={{headerRight: props => <AppHeaderRight {...props} />}}>
       <Stack.Screen name="Products" component={ProductsScreen} />
-      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="ProductDetail" options={{title: 'Product Detail'}} component={ProductDetailScreen} />
     </Stack.Navigator>
   );
 };
