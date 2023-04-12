@@ -1,11 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {useAuthStore} from 'hooks/store/use-auth-store';
-import {
-  AuthNavigationParams,
-  AuthNavigationStackProp,
-  AuthRouteProps,
-} from 'navigation/auth-navigation';
+import {AuthRouteProps} from 'navigation/auth-navigation';
 import {useState} from 'react';
 import {SafeAreaView, Text, StyleSheet} from 'react-native';
 import {verifyOtp} from 'services/phone-service';
@@ -20,7 +16,6 @@ export const OtpScreen = () => {
   const {user, setToken} = useAuthStore();
   const {setItem} = useAsyncStorage('token');
   const [invalidCode, setInvalidCode] = useState(false);
-  const navigation = useNavigation<AuthNavigationStackProp<'Otp'>>();
   const {
     params: {redirectFrom, token},
   } = useRoute<AuthRouteProps<'Otp'>>();
@@ -35,9 +30,8 @@ export const OtpScreen = () => {
     },
   });
 
-  const handleVerification = async (code: string) => {
+  const handleVerification = (code: string) => {
     verifyOtp(user.phoneNumber, code).then(async ({success}) => {
-      console.log({success});
       if (!success) setInvalidCode(true);
       else {
         if (redirectFrom === 'Signup') {

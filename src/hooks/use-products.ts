@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {useQuery} from 'react-query';
 import {getAllProducts} from 'services/product-service';

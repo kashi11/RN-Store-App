@@ -1,14 +1,28 @@
-import {Products} from 'components/products/products';
+import {useNavigation} from '@react-navigation/native';
+import {ProductList} from 'components/products/product-list';
 import {useProducts} from 'hooks/use-products';
+import {AppNavigationStackProp} from 'navigation/app-navigation';
 import React from 'react';
-import {ActivityIndicator, SafeAreaView} from 'react-native';
+import {SafeAreaView} from 'react-native';
+import {Product} from 'utils.ts/types';
 
 export const ProductsScreen = (): JSX.Element => {
-  const {data: products, error, isLoading} = useProducts('asc');
+  const {data: products, isLoading, refetch, isRefetching} = useProducts('asc');
+  const navigation = useNavigation<AppNavigationStackProp<'Products'>>();
+
+  const handleClick = (product: Product) => {
+    navigation.navigate('ProductDetail', {product});
+  };
+
   return (
     <SafeAreaView>
-      {isLoading && <ActivityIndicator style={{marginTop: 20}} />}
-      <Products products={products || []} />
+      <ProductList
+        onProductClick={handleClick}
+        loading={isLoading}
+        isRefetching={isRefetching}
+        onRefresh={refetch}
+        products={products || []}
+      />
     </SafeAreaView>
   );
 };
