@@ -4,9 +4,13 @@ import {getAllProducts} from 'services/product-service';
 import {Product} from 'utils.ts/types';
 
 export const useProducts = (sort: string) => {
-  return useQuery<Product[], string>('products', () => getAllProducts(sort), {
-    onError: (error: any) => {
-      Toast.show({type: 'error', text1: error.message});
+  return useQuery<Product[], string>(
+    ['products', sort],
+    () => getAllProducts(sort),
+    {
+      onError: (error: any) => {
+        Toast.show({type: 'error', text1: error.message});
+      },
     },
-  });
+  );
 };
